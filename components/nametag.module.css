@@ -1,0 +1,15 @@
+#nameTagImg{
+    height: 25px;
+}
+.nav{
+    position: fixed;
+    z-index: 1000;
+    top: 0;
+    left: 0;
+    right: 0;
+    background-color: white;
+    display: flex;
+    justify-content: space-between;
+    padding: 20px;
+    border-bottom: 1px solid rgba(140, 140, 140, 0.363);
+}
