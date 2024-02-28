@@ -113,7 +113,7 @@ function Page({ params }) {
     if (isEmail()) {
       return <Button onClick={() => shareTag()} variant="contained" size="medium" sx={{ borderRadius: "20px" }}>Add</Button>
     }
-    return <Button onClick={() => handleClose(false)} variant="contained" size="medium" sx={{ borderRadius: "20px" }}>Done</Button>
+    return <Button onClick={() => setShareOpen(false)} variant="contained" size="medium" sx={{ borderRadius: "20px" }}>Done</Button>
   }
   if (loading) return <NameTagSkeleton />
   if (error) return <div>Error loading page</div>
@@ -131,7 +131,7 @@ function Page({ params }) {
           >
             <MenuIcon />
           </IconButton>
-          <img src='/nametag.webp' height={30} onClick={() => router.push('/')}/>
+          <img src='/nametag.webp' height={20} onClick={() => router.push('/')}/>
           <Typography variant="h6" component="div" fontFamily={"gloria Hallelujah"} onClick={() => router.push('/')} sx={{ flexGrow: 1 }}>
             Name Tag
           </Typography>
@@ -165,8 +165,8 @@ function Page({ params }) {
                 open={Boolean(anchorEl2)}
                 onClose={handleClose2}
               >
-                <MenuItem onClick={handleClose2}>NameTags</MenuItem>
-                <MenuItem onClick={handleClose2}>Profile</MenuItem>
+                <MenuItem onClick={()=>router.push('/')}>NameTags</MenuItem>
+                <MenuItem disabled onClick={handleClose2}>Profile</MenuItem>
                 <MenuItem onClick={()=>signOut()}>Logout</MenuItem>
               </Menu>
             </div>

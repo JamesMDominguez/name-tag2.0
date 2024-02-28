@@ -60,7 +60,7 @@ function Nametag({ id, name, color }) {
     return (
         <>
         <div onClick={() => router.push(`${id}`)} style={{ width: "350px", height: "20%", boxShadow: '0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)', borderRadius: "22px", margin: "20px" }}>
-            <div style={{ height: "10%", backgroundColor: color, borderTopLeftRadius: '20px', borderTopRightRadius: '20px', textAlign: "center", position: "relative", padding: "5px" }}>
+            <div style={{ height: "10%", backgroundColor: color, borderTopLeftRadius: '20px', borderTopRightRadius: '20px', textAlign: "center", position: "relative", height:"75px" }}>
                 <p style={{ color: "white", fontSize: "40px", fontFamily: "Arial" }}>Hello</p>
                 <p style={{ color: "white", fontSize: "15px", fontFamily: "Arial" }}>My Name is</p>
                 <IconButton
@@ -94,10 +94,10 @@ function Nametag({ id, name, color }) {
                     }}>Delete</MenuItem>
                 </Menu>
             </div>
-            <div style={{ backgroundColor: "white", padding: "15px", textAlign: "center" }}>
+            <div style={{ backgroundColor: "white", padding: "20px", textAlign: "center" }}>
                 <p style={{ fontFamily: "Gloria Hallelujah", fontSize: "30px" }}>{name}</p>
             </div>
-            <div style={{ borderBottomLeftRadius: '20px', borderBottomRightRadius: '20px', backgroundColor: color, padding: "15px" }}></div>
+            <div style={{ borderBottomLeftRadius: '20px', borderBottomRightRadius: '20px', backgroundColor: color, height:"52px" }}></div>
         </div>
         <Modal
             open={isOpen}

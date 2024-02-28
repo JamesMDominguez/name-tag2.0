@@ -90,7 +90,7 @@ function Page() {
 
   return (
     <div>
-      <AppBar position="static" color='inherit'>
+      <AppBar color='inherit'>
         <Toolbar>
           <IconButton
             size="large"
@@ -102,7 +102,7 @@ function Page() {
           >
             <MenuIcon />
           </IconButton>
-          <img src='/nametag.webp' height={30} />
+          <img src='/nametag.webp' height={20} />
           <Typography variant="h6" component="div" fontFamily={"gloria Hallelujah"} sx={{ flexGrow: 1 }}>
             Name Tag
           </Typography>
@@ -134,19 +134,29 @@ function Page() {
               open={Boolean(anchorEl)}
               onClose={handleClose}
             >
-              <MenuItem onClick={handleClose}>Profile</MenuItem>
-              <MenuItem onClick={handleClose}>My account</MenuItem>
+              <MenuItem disabled onClick={handleClose}>Profile</MenuItem>
               <MenuItem onClick={() => signOut()}>Logout</MenuItem>
             </Menu>
           </div>
         </Toolbar>
       </AppBar>
 
-      <div style={{ display: "flex", flexWrap: "wrap", justifyContent: "center", marginTop: "30px" }}>
+      <Stack
+        direction="row"
+        justifyContent="center"
+        alignItems="center"
+        spacing={2}
+        sx={{ height: "100vh" }} // Adjusted to full height
+      >
         {data?.getNameTags.map((tag) => (
-          <Nametag key={tag.nameTag._id} id={tag.nameTag._id} name={tag.nameTag.title} color={colors[Math.floor(Math.random() * 8)]} />
+          <Nametag
+            key={tag.nameTag._id}
+            id={tag.nameTag._id}
+            name={tag.nameTag.title}
+            color={colors[Math.floor(Math.random() * 8)]}
+          />
         ))}
-      </div>
+      </Stack>
 
       <Modal
         open={isOpen}
