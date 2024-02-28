@@ -38,7 +38,8 @@ function CreateNameTag({handleClose}:{ handleClose: () => void }){
       const handleFormChange = (e: ChangeEvent<HTMLInputElement>) => {
         setTagName(e.target.value);
       };
-
+ 
+      
     return(<>
       <p style={{ fontFamily: "Sans-serif", fontSize: "20px" }}>Create Name Tag</p>
       <Stack flexWrap="wrap" direction="row-reverse" row-reverse>
