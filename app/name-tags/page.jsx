@@ -7,7 +7,6 @@ import AppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
 import * as React from 'react';
 import Typography from '@mui/material/Typography';
-import Button from '@mui/material/Button';
 import IconButton from '@mui/material/IconButton';
 import MenuIcon from '@mui/icons-material/Menu';
 import AccountCircle from '@mui/icons-material/AccountCircle';
@@ -46,14 +45,7 @@ function Page() {
       <LoadingTag />
     )
   }
-  if (error) {
-    return (
-      <div>
-        <h1>Error</h1>
-        <p>{error.message}</p>
-      </div>
-    )
-  }
+
 
   return (
     <div>
