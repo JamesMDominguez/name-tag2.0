@@ -1,5 +1,5 @@
 "use client"
-import FaceUpload from '../faceUpload';
+import FaceUpload from './faceUpload';
 import { gql, useMutation } from '@apollo/client';
 import { useQuery } from '@apollo/experimental-nextjs-app-support/ssr';
 import CheckIcon from '@mui/icons-material/Check';
@@ -11,9 +11,10 @@ import MenuIcon from '@mui/icons-material/Menu';
 import AccountCircle from '@mui/icons-material/AccountCircle';
 import GroupsIcon from '@mui/icons-material/Groups';
 import { useRouter } from 'next/navigation';
-import NameTagSkeleton from '../../../../components/nameTagSkeleton';
-import Collaborator from '../../../../components/Collaborator';
+import NameTagSkeleton from '../../components/nameTagSkeleton';
+import Collaborator from '../../components/Collaborator';
 import LinkIcon from '@mui/icons-material/Link';
+import { signOut } from "next-auth/react"
 
 const DELETE_FACE = gql`mutation DeleteFace($deleteFaceId: ID!, $fileName: String!) {
   deleteFace(id: $deleteFaceId, fileName: $fileName)
@@ -56,8 +57,6 @@ const style = {
   p: 4,
 };
 
-
-
 function Page({ params }) {
   const [anchorEl, setAnchorEl] = useState(null);
   const [anchorEl2, setAnchorEl2] = useState(null);
@@ -72,6 +71,7 @@ function Page({ params }) {
   const [inputValue, setInputValue] = useState('');
   const [selectedInput, setSelectedInput] = useState(undefined);
   const { data, error, loading } = useQuery(getNameTag, { variables: { getNameTagId: pid } })
+
   const handleMenu = (event) => {
     setAnchorEl2(event.currentTarget);
   };
@@ -115,7 +115,6 @@ function Page({ params }) {
     }
     return <Button onClick={() => handleClose(false)} variant="contained" size="medium" sx={{ borderRadius: "20px" }}>Done</Button>
   }
-
   if (loading) return <NameTagSkeleton />
   if (error) return <div>Error loading page</div>
   return (
@@ -132,8 +131,8 @@ function Page({ params }) {
           >
             <MenuIcon />
           </IconButton>
-          <img src='/nametag.webp' height={30} />
-          <Typography variant="h6" component="div" fontFamily={"gloria Hallelujah"} onClick={() => router.push('/name-tags')} sx={{ flexGrow: 1 }}>
+          <img src='/nametag.webp' height={30} onClick={() => router.push('/')}/>
+          <Typography variant="h6" component="div" fontFamily={"gloria Hallelujah"} onClick={() => router.push('/')} sx={{ flexGrow: 1 }}>
             Name Tag
           </Typography>
           {true && (
@@ -168,7 +167,7 @@ function Page({ params }) {
               >
                 <MenuItem onClick={handleClose2}>NameTags</MenuItem>
                 <MenuItem onClick={handleClose2}>Profile</MenuItem>
-                <MenuItem onClick={handleClose2}>Logout</MenuItem>
+                <MenuItem onClick={()=>signOut()}>Logout</MenuItem>
               </Menu>
             </div>
           )}

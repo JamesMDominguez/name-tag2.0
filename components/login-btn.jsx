@@ -82,7 +82,7 @@ export default function Component() {
           </MenuItem>
           <MenuItem onClick={()=>{
             handleClose();
-            router.push('/name-tags')
+            router.push('/')
             }}>
             <ListItemIcon>
               <GroupsIcon fontSize="small"/>

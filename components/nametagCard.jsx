@@ -59,7 +59,7 @@ function Nametag({ id, name, color }) {
 
     return (
         <>
-        <div onClick={() => router.push(`name-tags/group/${id}`)} style={{ width: "350px", height: "20%", boxShadow: '0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)', borderRadius: "22px", margin: "20px" }}>
+        <div onClick={() => router.push(`${id}`)} style={{ width: "350px", height: "20%", boxShadow: '0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)', borderRadius: "22px", margin: "20px" }}>
             <div style={{ height: "10%", backgroundColor: color, borderTopLeftRadius: '20px', borderTopRightRadius: '20px', textAlign: "center", position: "relative", padding: "5px" }}>
                 <p style={{ color: "white", fontSize: "40px", fontFamily: "Arial" }}>Hello</p>
                 <p style={{ color: "white", fontSize: "15px", fontFamily: "Arial" }}>My Name is</p>

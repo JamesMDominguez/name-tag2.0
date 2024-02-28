@@ -16,8 +16,8 @@ import ReactCrop, {
   Crop,
   PixelCrop,
 } from 'react-image-crop'
-import { canvasPreview } from '../../../components/canvasPreview'
-import { useDebounceEffect } from '../../../components/useDebounceEffect'
+import { canvasPreview } from '../../components/canvasPreview'
+import { useDebounceEffect } from '../../components/useDebounceEffect'
 import LinearProgress from '@mui/material/LinearProgress';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import CropIcon from '@mui/icons-material/Crop';

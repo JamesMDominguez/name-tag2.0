@@ -59,7 +59,7 @@ function Nav() {
     <Box sx={{ width: 250 }}>
       <List>
         <ListItem disablePadding>
-          <ListItemButton onClick={()=>{router.push('/name-tags'); toggleDrawer(false);}}>
+          <ListItemButton onClick={()=>{router.push('/'); toggleDrawer(false);}}>
             <ListItemIcon>
               <HomeIcon />
             </ListItemIcon>
@@ -100,8 +100,8 @@ function Nav() {
         >
           {list()}
         </Drawer>
-        <img id={styles.nameTagImg} src='/nametag.webp' onClick={() => router.push("/name-tags")} />
-        <h2 onClick={() => router.push("/name-tags")}>Name Tag</h2>
+        <img id={styles.nameTagImg} src='/nametag.webp' onClick={() => router.push("/")} />
+        <h2 onClick={() => router.push("/")}>Name Tag</h2>
       </div>
       <div style={{ display: "flex" }}>
         <ThemeProvider theme={theme}>

@@ -43,7 +43,7 @@ export async function GET(req) {
     </head>
     <body>
     <div class="container">
-        <h3>Hello, this email is to inform you that you have been added to a Nametag, Click here to view: <a href="${process.env.NEXT_PUBLIC_HOME}/name-tags/group/${id}">Link</a></h3>
+        <h3>Hello, this email is to inform you that you have been added to a Nametag, Click here to view: <a href="${process.env.NEXT_PUBLIC_HOME}/${id}">Link</a></h3>
     </div>
     </body>
     </html>
