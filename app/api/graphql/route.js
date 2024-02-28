@@ -142,7 +142,8 @@ const resolvers = {
     },
     deleteCollaborator: async (_, { id }) => {
       const db = await mongo();
-      const data = await db.collection('Collaborator').deleteOne({ _id: id })
+      const data = await db.collection('Collaborator').deleteOne({ _id:  new ObjectId(id) })
+      console.log(data)
       return data.acknowledged
     }
   },

@@ -27,7 +27,7 @@
     ".next/types/**/*.ts",
     "**/*.ts",
     "**/*.tsx"
-, "app/name-tags/page.jsx", "components/nametagCard.jsx", "components/loadingTag.jsx", "app/name-tags/group/faceUpload.jsx"  ],
+, "app/name-tags/page.jsx", "components/nametagCard.jsx", "components/loadingTag.jsx", "app/name-tags/group/faceUpload.jsx", "app/name-tags/group/[id]/page.jsx", "components/shareModal.jsx", "components/Collaborator.jsx"  ],
   "exclude": [
     "node_modules"
   ]

@@ -14,23 +14,39 @@ export async function GET(req) {
   const mailOptions = {
     from: 'jamesdominguez2020@gmail.com',
     to: email,
-    subject: `Message from ${name}`,
-    text: `Hello!,
-We're excited to inform you that you've been added to Name Tag at this link http://localhost:3000/name-tags/group/${id}, Name Tag is a web app that helps you remember names by associating them with photos. Here's a brief summary:
-
-Name Tag is a web app and server that uses photos with labels to aid name recall.
-Upload photos, add names, and utilize facial recognition for automatic detection.
-Collaborate and track names by sharing your Name Tag website with others.
-
-Getting Started:
-
-Visit our website and create an account.
-Upload photos, add names, and let facial recognition do its magic.
-
-Thank you for joining Name Tag! Enjoy the seamless name-recall experience.
-
-Best,
-The NameTag Team
+    subject: `Nametag Invitation`,
+    text: `<!DOCTYPE html>
+    <html>
+    <head>
+    <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f2f2f2;
+      text-align: center;
+    }
+    
+    .container {
+      max-width: 600px;
+      margin: 0 auto;
+      margin-top: 50px;
+      padding: 20px;
+      background-color: #ffffff;
+      border-radius: 5px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+    
+    h3 {
+      color: #333333;
+    }
+    
+    </style>
+    </head>
+    <body>
+    <div class="container">
+        <h3>Hello, this email is to inform you that you have been added to a Nametag, Click here to view: <a href="${process.env.NEXT_PUBLIC_HOME}/name-tags/group/${id}">Link</a></h3>
+    </div>
+    </body>
+    </html>
 `
   };
 
