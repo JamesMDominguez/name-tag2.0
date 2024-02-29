@@ -1,32 +1,25 @@
 import IconButton from '@mui/material/IconButton';
 import GroupAddIcon from '@mui/icons-material/GroupAdd';
 import { ChangeEvent, useRef, useState, useEffect } from 'react';
-import { Modal, Stack } from '@mui/material';
-import Image from 'next/image';
+import { Modal, Stack, TextField } from '@mui/material';
 import Box from '@mui/material/Box';
-import ImageList from '@mui/material/ImageList';
-import ImageListItem from '@mui/material/ImageListItem';
 import CancelIcon from '@mui/icons-material/Cancel';
-import AutoFixHighIcon from '@mui/icons-material/AutoFixHigh';
 import DoneIcon from '@mui/icons-material/Done';
 import DownloadIcon from '@mui/icons-material/Download';
 import PersonSearchIcon from '@mui/icons-material/PersonSearch';
 import Button from '@mui/material/Button';
-import ReactCrop, {
-  Crop,
-  PixelCrop,
-} from 'react-image-crop'
+import ReactCrop from 'react-image-crop'
 import { canvasPreview } from '../../components/canvasPreview'
 import { useDebounceEffect } from '../../components/useDebounceEffect'
-import LinearProgress from '@mui/material/LinearProgress';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import CropIcon from '@mui/icons-material/Crop';
 import 'react-image-crop/dist/ReactCrop.css'
 import { gql, useMutation } from '@apollo/client';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import { useLazyQuery } from '@apollo/client';
 import { FilesetResolver, ImageSegmenter } from '@mediapipe/tasks-vision';
 import { styled } from '@mui/material/styles';
+import { useQuery } from '@apollo/experimental-nextjs-app-support/ssr';
+import { useSession } from "next-auth/react"
 
 const VisuallyHiddenInput = styled('input')({
   clip: 'rect(0 0 0 0)',
@@ -97,13 +90,17 @@ export default function Plus({ pid }) {
   const [open, setOpen] = useState(false);
   const [imagePreview, setImagePreview] = useState(undefined);
   const [cropActive, setCropActive] = useState(false)
-  const [searchingFaces, setSearchingFaces] = useState(false)
-  const [selectingNameTag, setSelectingNameTag] = useState(false)
+  const [selectingFace, setSelectingFace] = useState('')
   const [image, setImage] = useState(false);
+  const [currentTab, setCurrentTab] = useState('');
   const imageRef = useRef(null);
   const canvasRef = useRef(null);
-  const [getNameTags, { data }] = useLazyQuery(GETNAMETAGS);
-  const [getFaces, searchFaces] = useLazyQuery(GET_NAMETAG_FACES)
+  const { data: session } = useSession()
+
+  const { data } = useQuery(GETNAMETAGS, {
+    variables: { username: session?.user?.email }
+  });
+  const { data: queryData,refetch } = useQuery(GET_NAMETAG_FACES,{variables: { getNameTagId: "" }});
 
   const [createFace] = useMutation(CREATEFACE, {
     refetchQueries: [{ query: getNameTag, variables: { getNameTagId: pid } }],
@@ -120,6 +117,7 @@ export default function Plus({ pid }) {
   }
 
   const handleImage = (e) => {
+    setCurrentTab("imageUpload")
     const file = e.target.files?.[0];
     const reader = new FileReader();
     reader.readAsDataURL(file);
@@ -159,7 +157,7 @@ export default function Plus({ pid }) {
     return canvas?.toDataURL();
   }
 
-  useEffect(() => {    
+  useEffect(() => {
     if (image) {
       const processImage = async () => {
         const model = await FilesetResolver.forVisionTasks("https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.2/wasm");
@@ -197,8 +195,6 @@ export default function Plus({ pid }) {
     }
   }, [image]);
 
-
-
   function cropImage() {
     const canvas = previewCanvasRef.current;
     const base64 = canvas?.toDataURL();
@@ -210,9 +206,6 @@ export default function Plus({ pid }) {
     const base64Data = parts[1];
     createFace({ variables: { nameTagId: pid, image: base64Data } })
   }
-
-
-
   return (
     <>
       <IconButton color="default" aria-label="upload picture" onClick={() => setOpen(true)} component="label" sx={{ position: "fixed", bottom: 20, right: 20, backgroundColor: "#bdbdbd", padding: "20px", borderColor: "black" }}>
@@ -225,8 +218,8 @@ export default function Plus({ pid }) {
         aria-describedby="modal-modal-description"
       >
         <Box sx={style}>
-          { !cropActive && imagePreview && <img src={imagePreview} ref={imageRef} style={{ maxHeight: "450px", maxWidth: "650px", display: "block", margin: "0 auto", marginBottom: "20px" }} alt="Uploaded Image" />}
-          {cropActive &&
+          {currentTab == "imageUpload" &&!cropActive && imagePreview && <img src={imagePreview} ref={imageRef} style={{ maxHeight: "450px", maxWidth: "650px", display: "block", margin: "0 auto", marginBottom: "20px" }} alt="Uploaded Image" />}
+          {currentTab == "imageUpload" && cropActive &&
             <div style={{ textAlign: 'center' }}>
               <ReactCrop
                 crop={crop}
@@ -240,10 +233,9 @@ export default function Plus({ pid }) {
                   style={{ maxHeight: "450px", maxWidth: "650px", display: "block", margin: "0 auto", marginBottom: "20px" }}
                 />
               </ReactCrop>
-              <canvas ref={previewCanvasRef} style={{ display: "none" }} />
             </div>}
 
-          { cropActive &&
+          {currentTab == "imageUpload" && cropActive &&
             <Stack direction="row" justifyContent="space-between" spacing={2}>
               <ThemeProvider theme={theme}>
                 <Button variant="outlined" startIcon={<CancelIcon />} href="#contained-buttons" onClick={() => setCropActive(false)} sx={{ float: "right", borderRadius: "25px" }}>
@@ -256,57 +248,84 @@ export default function Plus({ pid }) {
             </Stack>
           }
 
-          { !cropActive && imagePreview &&
+          {currentTab == "imageUpload" && !cropActive && imagePreview &&
             <Stack direction="row" justifyContent="space-between" spacing={2}>
-              <ThemeProvider theme={theme}>
+                <Button variant="outlined" startIcon={<CancelIcon />} href="#contained-buttons" onClick={() => {setCurrentTab(""); setImagePreview(undefined); setImage(false);}} sx={{ borderRadius: "25px" }}>
+                  Cancel
+                </Button>
                 <Button variant="outlined" onClick={() => setCropActive(true)} startIcon={<CropIcon />} color="primary" sx={{ width: "6rem", borderRadius: "25px" }}>
                   Crop
                 </Button>
                 <Button variant="outlined" startIcon={<DownloadIcon />} href="#contained-buttons" onClick={() => { uploadImage(); handleClose() }} sx={{ width: "7rem", borderRadius: "25px" }}>
                   Upload
                 </Button>
-              </ThemeProvider>
             </Stack>}
 
           <Stack direction="column" justifyContent="space-between" spacing={2}>
-            {!imagePreview && !data && !searchingFaces && <>
-              <ThemeProvider theme={theme}>
-                <Button variant="outlined" startIcon={<PersonSearchIcon />} onClick={() => { setSearchingFaces(true); getNameTags({ variables: { username: "jamesdominguez2020@gmail.com" } }) }} color="primary" sx={{ padding: "15px", borderRadius: "25px" }}>
-                  search existing face
-                </Button>
-              </ThemeProvider>
-            </>
-            }
-            {!selectingNameTag && data && data.getNameTags.map((tag, index) => {
-              return (<Button key={index} variant="outlined" onClick={() => { setSelectingNameTag(true); getFaces({ variables: { getNameTagId: tag.nameTag._id } }) }} color="primary" sx={{ padding: "15px", borderRadius: "25px" }}>
-                {tag.nameTag.title}
-              </Button>)
-            })}
-            {selectingNameTag && searchFaces.data && searchFaces.data.getNameTag.faces.slice(0, 2).map((face) => {
-              return (<>
-                <img src={face.image} style={{ height: "50px", width: "50px" }} />
-                <p>{face.name}</p>
-              </>)
-            })}
-            {!imagePreview && !searchingFaces && <>
+            {currentTab == "" && <>
+              <Button variant="outlined" startIcon={<PersonSearchIcon />} onClick={() => { setCurrentTab("selectTag") }} color="primary" sx={{ padding: "15px", borderRadius: "25px" }}>
+                search existing face
+              </Button>
               <Button
                 component="label"
                 role={undefined}
                 variant="outlined"
                 onChange={handleImage}
-                sx={{ padding: "15px", borderRadius: "25px"}}
+                sx={{ padding: "15px", borderRadius: "25px" }}
                 tabIndex={-1}
                 startIcon={<CloudUploadIcon />}
               >
                 Upload file
                 <VisuallyHiddenInput type="file" />
               </Button>
-            </>
-            }
+            </>}
+
+            {currentTab == "selectTag" && <>
+              {data?.getNameTags.map((tag, index) => {
+                return (
+                  <Button key={index} variant="outlined" onClick={() => { setCurrentTab("selectFace"); refetch({ getNameTagId: tag.nameTag._id }); }} color="primary" sx={{ padding: "15px", borderRadius: "25px" }}>
+                    {tag.nameTag.title}
+                  </Button>
+                )
+              })}
+              <Stack direction="row" justifyContent="space-between" spacing={2}>
+                <Button variant="outlined" startIcon={<CancelIcon />} href="#contained-buttons" onClick={() => { setCurrentTab("") }} sx={{ borderRadius: "25px" }}>
+                  Cancel
+                </Button>
+                <Button variant="outlined" startIcon={<DoneIcon />} href="#contained-buttons" onClick={() => { setCurrentTab("") }} sx={{ borderRadius: "25px" }}>
+                  Done
+                </Button>
+              </Stack>
+            </>}
+
+
+            {currentTab == "selectFace" && (
+              <>
+                <TextField id="outlined-basic" label="Name" variant="outlined" value={selectingFace} onChange={(e) => setSelectingFace(e.target.value)} />
+                <Stack direction="row" justifyContent="space-between" spacing={2}>
+                  {queryData?.getNameTag.faces.filter((face) => face.name.toLowerCase().includes(selectingFace.toLowerCase())).slice(0, 5).map((face, index) => {
+                    return (<Button key={index} color={"inherit"} variant="outlined" onClick={() => { setCurrentTab("") }} sx={{ padding: "15px", borderRadius: "25px" }}>
+                      {face.name}
+                    </Button>)
+                  }
+                  )}
+                </Stack>
+                <Stack direction="row" justifyContent="space-between" spacing={2}>
+                  <Button variant="outlined" startIcon={<CancelIcon />} href="#contained-buttons" onClick={() => { setCurrentTab("selectTag") }} sx={{ borderRadius: "25px" }}>
+                    Cancel
+                  </Button>
+                  <Button variant="outlined" startIcon={<DoneIcon />} href="#contained-buttons" onClick={() => { setCurrentTab("selectTag") }} sx={{ borderRadius: "25px" }}>
+                    Done
+                  </Button>
+                </Stack>
+              </>
+            )}
+
           </Stack>
         </Box>
       </Modal>
       <canvas ref={canvasRef} style={{ display: "none" }} />
+      <canvas ref={previewCanvasRef} style={{ display: "none" }} />
     </>
   );
 }
